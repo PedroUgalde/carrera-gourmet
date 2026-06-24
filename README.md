@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Carrera Gourmet MVP
 
-## Getting Started
+Plataforma bilateral para conectar turistas internacionales con puestos de comida local durante la Copa Mundial 2026 en México (CDMX, Guadalajara, Monterrey).
 
-First, run the development server:
+## Stack
+
+- **Next.js 15+** (App Router) + React + TypeScript
+- **Tailwind CSS** + **shadcn/ui**
+- **Supabase** (PostgreSQL + Auth + RLS)
+- **OpenAI** via Vercel AI SDK (traducción de menús)
+- **Leaflet** + OpenStreetMap (mapas)
+
+## Configuración inicial
+
+### 1. Instalar dependencias
+
+```bash
+npm install
+```
+
+### 2. Variables de entorno
+
+Copia `.env.example` a `.env.local` y completa:
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
+OPENAI_API_KEY=sk-...
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+### 3. Supabase
+
+1. Crea un proyecto en [supabase.com](https://supabase.com)
+2. Habilita **Email/Password** en Authentication → Providers
+3. Ejecuta el SQL en `supabase/migrations/001_initial_schema.sql` en el SQL Editor
+4. (Opcional) Seed demo: `POST http://localhost:3000/api/seed` después de configurar env
+
+### 4. Ejecutar
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Flujos
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Ruta | Rol | Descripción |
+|------|-----|-------------|
+| `/register?role=tourist` | Turista | Registro |
+| `/register?role=vendor` | Comerciante | Registro |
+| `/vendor/dashboard` | Comerciante | Registrar negocio, menú, mapa, traducción IA |
+| `/tourist/search` | Turista | Preferencias + geolocalización |
+| `/tourist/results` | Turista | Top 3 locales + reserva instantánea |
 
-## Learn More
+## API Routes
 
-To learn more about Next.js, take a look at the following resources:
+| Endpoint | Método | Descripción |
+|----------|--------|-------------|
+| `/api/recommend` | POST | Motor híbrido: distancia + tags + aforo |
+| `/api/translate-menu` | POST | Traducción IA español → inglés + tags |
+| `/api/reservations` | POST/GET | Reserva atómica con RPC `book_reservation` |
+| `/api/seed` | POST | Insertar 6 vendors demo |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Modo demo (sin Supabase)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Sin `.env.local` configurado, la app usa **modo demo**:
 
-## Deploy on Vercel
+- Banner amarillo en la parte superior
+- En `/register` y `/login`: botones **Demo Tourist** / **Demo Vendor**
+- En la landing: **Try Demo** → `/tourist/search` sin registro
+- Búsqueda con 6 vendors en memoria; vendor dashboard guarda en `localStorage`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Auth real (Supabase)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Copia `.env.example` a `.env.local` con credenciales reales de tu proyecto Supabase y **reinicia** `npm run dev`.
+
+## Demo vendors (seed)
+
+Tras ejecutar `/api/seed`, usa estas credenciales:
+
+- Email: `demo-vendor-1@carrera-gourmet.demo` … `demo-vendor-6@carrera-gourmet.demo`
+- Password: `DemoVendor123!`
+# carrera-gourmet
