@@ -1,4 +1,5 @@
 import type { MenuItem, RecommendedVendor } from "@/lib/types/database";
+import { MOCK_VENDOR_IMAGES } from "@/lib/vendor-images";
 
 export const DEMO_VENDORS: RecommendedVendor[] = [
   {
@@ -11,6 +12,7 @@ export const DEMO_VENDORS: RecommendedVendor[] = [
     capacity_total: 20,
     available: 18,
     tags: ["Traditional", "Beef", "Spicy"],
+    image_url: MOCK_VENDOR_IMAGES[0],
     distance_km: 0,
     score: 0,
     menus: [
@@ -48,6 +50,7 @@ export const DEMO_VENDORS: RecommendedVendor[] = [
     capacity_total: 15,
     available: 12,
     tags: ["Vegetarian", "Traditional", "Vegan"],
+    image_url: MOCK_VENDOR_IMAGES[1],
     distance_km: 0,
     score: 0,
     menus: [
@@ -85,6 +88,7 @@ export const DEMO_VENDORS: RecommendedVendor[] = [
     capacity_total: 25,
     available: 20,
     tags: ["Traditional", "Beef"],
+    image_url: MOCK_VENDOR_IMAGES[2],
     distance_km: 0,
     score: 0,
     menus: [
@@ -111,6 +115,7 @@ export const DEMO_VENDORS: RecommendedVendor[] = [
     capacity_total: 18,
     available: 15,
     tags: ["Spicy", "Pork", "Traditional"],
+    image_url: MOCK_VENDOR_IMAGES[3],
     distance_km: 0,
     score: 0,
     menus: [
@@ -137,6 +142,7 @@ export const DEMO_VENDORS: RecommendedVendor[] = [
     capacity_total: 30,
     available: 25,
     tags: ["Traditional", "Goat"],
+    image_url: MOCK_VENDOR_IMAGES[4],
     distance_km: 0,
     score: 0,
     menus: [
@@ -163,6 +169,7 @@ export const DEMO_VENDORS: RecommendedVendor[] = [
     capacity_total: 12,
     available: 10,
     tags: ["Vegetarian", "Vegan"],
+    image_url: MOCK_VENDOR_IMAGES[5],
     distance_km: 0,
     score: 0,
     menus: [
@@ -209,6 +216,7 @@ export const DEMO_SEED_VENDORS = DEMO_VENDORS.map((v) => ({
     sun: "11-21",
   },
   tags: v.tags,
+  image_url: v.image_url ?? null,
   menus: v.menus.map((m) => ({
     item_name: m.item_name,
     description_original: m.description_original,

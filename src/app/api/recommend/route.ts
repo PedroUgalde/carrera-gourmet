@@ -91,6 +91,7 @@ export async function POST(request: Request) {
         capacity_total: cap?.capacity_total ?? v.capacity_total,
         available: cap?.available ?? v.capacity_total,
         tags: v.tags ?? [],
+        image_url: v.image_url ?? null,
         menus: (menus ?? []).filter((m) => m.vendor_id === v.id) as MenuItem[],
       };
     });

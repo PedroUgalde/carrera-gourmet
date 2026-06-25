@@ -45,9 +45,9 @@ export function LocationAddressForm({
   const boroughLabel = BOROUGH_LABEL[city];
 
   return (
-    <div className="space-y-4 rounded-lg border bg-muted/20 p-4">
+    <div className="space-y-4 rounded-xl border-2 border-orange-100 bg-orange-50/30 p-4">
       <div>
-        <p className="text-sm font-semibold text-[#2D6A4F]">Dirección del puesto</p>
+        <p className="text-sm font-bold text-[#FF6B00]">Dirección del puesto</p>
         <p className="text-xs text-muted-foreground">
           Completa la dirección para ubicar tu negocio con precisión en el mapa.
         </p>
@@ -103,7 +103,7 @@ export function LocationAddressForm({
       </div>
 
       {geocoding && (
-        <p className="text-xs text-[#2D6A4F]">Buscando ubicación en el mapa...</p>
+        <p className="text-xs text-[#FF6B00]">Buscando ubicación en el mapa...</p>
       )}
     </div>
   );

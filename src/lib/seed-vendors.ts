@@ -7,6 +7,7 @@ export interface SeedVendor {
   longitude: number;
   capacity_total: number;
   tags: string[];
+  image_url?: string;
   menus: {
     item_name: string;
     description_original: string;

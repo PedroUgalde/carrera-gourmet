@@ -4,6 +4,8 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { GraffitiLogo } from "@/components/branding/GraffitiLogo";
+import { StreetShell } from "@/components/layout/StreetShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,11 +38,11 @@ function RegisterForm() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
+      toast.error("Las contraseñas no coinciden");
       return;
     }
     if (password.length < 6) {
-      toast.error("Password must be at least 6 characters");
+      toast.error("La contraseña debe tener al menos 6 caracteres");
       return;
     }
 
@@ -48,7 +50,7 @@ function RegisterForm() {
     try {
       if (demoMode) {
         demoSignUp(email, role);
-        toast.success("Demo account created!");
+        toast.success("Cuenta demo creada");
         redirectByRole(role);
         return;
       }
@@ -60,7 +62,7 @@ function RegisterForm() {
       });
       if (error) throw error;
 
-      toast.success("Account created! You can sign in now.");
+      toast.success("Cuenta creada. Ya puedes entrar.");
       redirectByRole(role);
     } catch (err) {
       toast.error(authErrorMessage(err));
@@ -71,125 +73,136 @@ function RegisterForm() {
 
   const handleQuickDemo = (demoRole: UserRole) => {
     demoQuickEnter(demoRole);
-    toast.success(`Entered as demo ${demoRole}`);
+    toast.success(`Entraste como demo ${demoRole}`);
     redirectByRole(demoRole);
   };
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="text-2xl text-[#2D6A4F]">Create account</CardTitle>
-        {demoMode && (
-          <p className="text-sm text-amber-700">
-            Supabase no está configurado. Puedes registrarte en modo demo o entrar
-            directamente abajo.
-          </p>
-        )}
-      </CardHeader>
-      <CardContent>
-        {demoMode && (
-          <div className="mb-4 grid grid-cols-2 gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="border-[#E85D04] text-[#E85D04]"
-              onClick={() => handleQuickDemo("tourist")}
-            >
-              Demo Tourist
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="border-[#2D6A4F] text-[#2D6A4F]"
-              onClick={() => handleQuickDemo("vendor")}
-            >
-              Demo Vendor
-            </Button>
-          </div>
-        )}
+    <div className="w-full max-w-md space-y-6">
+      <div className="flex justify-center">
+        <GraffitiLogo size="md" />
+      </div>
 
-        <form onSubmit={handleRegister} className="space-y-4">
-          <div className="space-y-2">
-            <Label>I am a...</Label>
-            <div className="grid grid-cols-2 gap-2">
+      <Card className="street-card border-orange-200 shadow-md">
+        <CardHeader>
+          <CardTitle className="street-heading text-2xl normal-case">
+            Crear cuenta
+          </CardTitle>
+          {demoMode && (
+            <p className="text-sm text-amber-700">
+              Supabase no está configurado. Regístrate en modo demo o entra
+              directamente abajo.
+            </p>
+          )}
+        </CardHeader>
+        <CardContent>
+          {demoMode && (
+            <div className="mb-4 grid grid-cols-2 gap-2">
               <Button
                 type="button"
-                variant={role === "tourist" ? "default" : "outline"}
-                className={
-                  role === "tourist"
-                    ? "bg-[#E85D04] hover:bg-[#E85D04]/90"
-                    : ""
-                }
-                onClick={() => setRole("tourist")}
+                variant="outline"
+                className="rounded-full border-[#FF6B00] font-semibold text-[#FF6B00]"
+                onClick={() => handleQuickDemo("tourist")}
               >
-                Tourist
+                Demo Turista
               </Button>
               <Button
                 type="button"
-                variant={role === "vendor" ? "default" : "outline"}
-                className={
-                  role === "vendor"
-                    ? "bg-[#2D6A4F] hover:bg-[#2D6A4F]/90"
-                    : ""
-                }
-                onClick={() => setRole("vendor")}
+                variant="outline"
+                className="rounded-full border-neutral-900 font-semibold text-neutral-900"
+                onClick={() => handleQuickDemo("vendor")}
               >
-                Vendor
+                Demo Puesto
               </Button>
             </div>
-          </div>
-          <div className="space-y-2">
-            <Label>Email</Label>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Password</Label>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Confirm password</Label>
-            <Input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-          </div>
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#2D6A4F] hover:bg-[#2D6A4F]/90"
-          >
-            {loading ? "Creating account..." : demoMode ? "Register (Demo)" : "Register"}
-          </Button>
-        </form>
-        <p className="mt-4 text-center text-sm text-muted-foreground">
-          Already have an account?{" "}
-          <Link href="/login" className="text-[#E85D04] hover:underline">
-            Sign in
-          </Link>
-        </p>
-      </CardContent>
-    </Card>
+          )}
+
+          <form onSubmit={handleRegister} className="space-y-4">
+            <div className="space-y-2">
+              <Label>Soy...</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  type="button"
+                  variant={role === "tourist" ? "default" : "outline"}
+                  className={
+                    role === "tourist"
+                      ? "rounded-full bg-[#FF6B00] hover:bg-[#E85D04]"
+                      : "rounded-full"
+                  }
+                  onClick={() => setRole("tourist")}
+                >
+                  Turista
+                </Button>
+                <Button
+                  type="button"
+                  variant={role === "vendor" ? "default" : "outline"}
+                  className={
+                    role === "vendor"
+                      ? "rounded-full bg-neutral-900 hover:bg-neutral-800"
+                      : "rounded-full"
+                  }
+                  onClick={() => setRole("vendor")}
+                >
+                  Comerciante
+                </Button>
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="border-orange-100"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Contraseña</Label>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="border-orange-100"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Confirmar contraseña</Label>
+              <Input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="border-orange-100"
+                required
+              />
+            </div>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full street-btn"
+            >
+              {loading ? "Creando..." : demoMode ? "Registrarse (Demo)" : "Registrarse"}
+            </Button>
+          </form>
+          <p className="mt-4 text-center text-sm text-neutral-600">
+            ¿Ya tienes cuenta?{" "}
+            <Link href="/login" className="font-semibold text-[#FF6B00] hover:underline">
+              Entrar
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
 export default function RegisterPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#FFF8F0] p-4">
+    <StreetShell centered showTagline={false}>
       <Suspense>
         <RegisterForm />
       </Suspense>
-    </div>
+    </StreetShell>
   );
 }

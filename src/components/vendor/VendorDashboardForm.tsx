@@ -64,6 +64,7 @@ export function VendorDashboardForm() {
   const [latitude, setLatitude] = useState(CITY_COORDS.CDMX.lat);
   const [longitude, setLongitude] = useState(CITY_COORDS.CDMX.lng);
   const [capacityTotal, setCapacityTotal] = useState(20);
+  const [imageUrl, setImageUrl] = useState("");
   const [hours, setHours] = useState<Record<string, string>>(DEFAULT_HOURS);
   const [menuItems, setMenuItems] = useState<MenuItemInput[]>([
     { item_name: "", description_original: "", price: 0, tags: [] },
@@ -126,6 +127,7 @@ export function VendorDashboardForm() {
             setLatitude(saved.latitude);
             setLongitude(saved.longitude);
             setCapacityTotal(saved.capacity_total);
+            setImageUrl(saved.image_url ?? "");
             setHours(saved.hours ?? DEFAULT_HOURS);
             if (saved.menuItems.length > 0) {
               setMenuItems(saved.menuItems);
@@ -163,6 +165,7 @@ export function VendorDashboardForm() {
         setLatitude(v.latitude);
         setLongitude(v.longitude);
         setCapacityTotal(v.capacity_total);
+        setImageUrl(v.image_url ?? "");
         setHours(v.hours ?? DEFAULT_HOURS);
 
         const { data: menus } = await supabase
@@ -229,7 +232,20 @@ export function VendorDashboardForm() {
         return item;
       });
       setMenuItems(updated);
-      toast.success("Menú traducido con IA");
+      if (data.source === "ollama") {
+        toast.success("Menú traducido al inglés con IA local (Ollama)");
+      } else if (data.source === "gemini") {
+        toast.success("Menú traducido al inglés con Gemini");
+      } else if (data.source === "openai") {
+        toast.success("Menú traducido al inglés con OpenAI");
+      } else if (data.source === "demo-fallback") {
+        toast.warning(
+          data.note ??
+            "IA no disponible — traducción con glosario callejero."
+        );
+      } else {
+        toast.success("Menú traducido al inglés (glosario callejero)");
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Error al traducir");
     } finally {
@@ -266,6 +282,7 @@ export function VendorDashboardForm() {
           longitude,
           capacity_total: capacityTotal,
           hours,
+          image_url: imageUrl.trim() || null,
           menuItems: menuItems.filter(
             (i) => i.item_name && i.description_original
           ),
@@ -293,6 +310,7 @@ export function VendorDashboardForm() {
         capacity_total: capacityTotal,
         hours,
         tags: allTags,
+        image_url: imageUrl.trim() || null,
       };
 
       let currentVendorId = vendorId;
@@ -359,20 +377,25 @@ export function VendorDashboardForm() {
   }
 
   return (
-    <form onSubmit={handleSave} className="mx-auto max-w-2xl space-y-6 p-4">
+    <form onSubmit={handleSave} className="mx-auto max-w-2xl space-y-6 p-4 py-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#2D6A4F]">Portal Comerciante</h1>
-          <p className="text-sm text-muted-foreground">
-            Registra tu puesto para turistas del Mundial 2026
+          <h1 className="street-heading text-2xl">Mi puesto</h1>
+          <p className="text-sm text-neutral-600">
+            Registra tu negocio para turistas del Mundial 2026
           </p>
         </div>
-        <Button type="button" variant="outline" onClick={handleLogout}>
+        <Button
+          type="button"
+          variant="outline"
+          className="rounded-full border-orange-200"
+          onClick={handleLogout}
+        >
           Salir
         </Button>
       </div>
 
-      <Card>
+      <Card className="street-card">
         <CardHeader>
           <CardTitle>Datos del negocio</CardTitle>
         </CardHeader>
@@ -385,6 +408,32 @@ export function VendorDashboardForm() {
               placeholder="Ej: Tacos El Güero"
               required
             />
+          </div>
+          <div className="space-y-2">
+            <Label>Foto del local (URL)</Label>
+            <Input
+              value={imageUrl}
+              onChange={(e) => setImageUrl(e.target.value)}
+              placeholder="https://ejemplo.com/foto.jpg"
+              type="url"
+            />
+            <p className="text-xs text-muted-foreground">
+              Pega la URL de una foto de tu puesto. Si la dejas vacía, usamos una
+              imagen de ejemplo.
+            </p>
+            {imageUrl.trim() && (
+              <div className="relative mt-2 h-32 w-full overflow-hidden rounded-lg border">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={imageUrl}
+                  alt="Vista previa"
+                  className="h-full w-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).style.display = "none";
+                  }}
+                />
+              </div>
+            )}
           </div>
           <div className="space-y-2">
             <Label>Ciudad</Label>
@@ -445,7 +494,7 @@ export function VendorDashboardForm() {
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="street-card">
         <CardContent className="pt-6">
           <MenuItemForm
             items={menuItems}
@@ -459,7 +508,7 @@ export function VendorDashboardForm() {
       <Button
         type="submit"
         disabled={saving}
-        className="w-full bg-[#2D6A4F] hover:bg-[#2D6A4F]/90"
+        className="w-full street-btn"
         size="lg"
       >
         {saving ? "Guardando..." : "Guardar negocio"}

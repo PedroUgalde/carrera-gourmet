@@ -4,6 +4,8 @@ import { Suspense, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "sonner";
+import { GraffitiLogo } from "@/components/branding/GraffitiLogo";
+import { StreetShell } from "@/components/layout/StreetShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -45,7 +47,7 @@ function LoginForm() {
     try {
       if (demoMode) {
         const user = demoSignIn(email) ?? demoSignUp(email, "tourist");
-        toast.success("Signed in (demo mode)");
+        toast.success("Sesión iniciada (modo demo)");
         redirectAfterAuth(user.role);
         return;
       }
@@ -72,87 +74,97 @@ function LoginForm() {
 
   const handleQuickDemo = (role: "tourist" | "vendor") => {
     const user = demoQuickEnter(role);
-    toast.success(`Signed in as demo ${role}`);
+    toast.success(`Entraste como demo ${role}`);
     redirectAfterAuth(user.role);
   };
 
   return (
-    <Card className="w-full max-w-md">
-      <CardHeader>
-        <CardTitle className="text-2xl text-[#2D6A4F]">Sign in</CardTitle>
-        {demoMode && (
-          <p className="text-sm text-amber-700">
-            Modo demo activo. Usa los botones rápidos o cualquier email registrado
-            previamente en demo.
-          </p>
-        )}
-      </CardHeader>
-      <CardContent>
-        {demoMode && (
-          <div className="mb-4 grid grid-cols-2 gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="border-[#E85D04] text-[#E85D04]"
-              onClick={() => handleQuickDemo("tourist")}
-            >
-              Demo Tourist
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="border-[#2D6A4F] text-[#2D6A4F]"
-              onClick={() => handleQuickDemo("vendor")}
-            >
-              Demo Vendor
-            </Button>
-          </div>
-        )}
+    <div className="w-full max-w-md space-y-6">
+      <div className="flex justify-center">
+        <GraffitiLogo size="md" />
+      </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div className="space-y-2">
-            <Label>Email</Label>
-            <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Label>Password</Label>
-            <Input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required={!demoMode}
-            />
-          </div>
-          <Button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-[#2D6A4F] hover:bg-[#2D6A4F]/90"
-          >
-            {loading ? "Signing in..." : demoMode ? "Sign in (Demo)" : "Sign in"}
-          </Button>
-        </form>
-        <p className="mt-4 text-center text-sm text-muted-foreground">
-          No account?{" "}
-          <Link href="/register" className="text-[#E85D04] hover:underline">
-            Register
-          </Link>
-        </p>
-      </CardContent>
-    </Card>
+      <Card className="street-card border-orange-200 shadow-md">
+        <CardHeader>
+          <CardTitle className="street-heading text-2xl normal-case">
+            Entrar
+          </CardTitle>
+          {demoMode && (
+            <p className="text-sm text-amber-700">
+              Modo demo activo. Usa los botones rápidos o cualquier email
+              registrado previamente.
+            </p>
+          )}
+        </CardHeader>
+        <CardContent>
+          {demoMode && (
+            <div className="mb-4 grid grid-cols-2 gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-full border-[#FF6B00] font-semibold text-[#FF6B00]"
+                onClick={() => handleQuickDemo("tourist")}
+              >
+                Demo Turista
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-full border-neutral-900 font-semibold text-neutral-900"
+                onClick={() => handleQuickDemo("vendor")}
+              >
+                Demo Puesto
+              </Button>
+            </div>
+          )}
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="space-y-2">
+              <Label>Email</Label>
+              <Input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="border-orange-100"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Contraseña</Label>
+              <Input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="border-orange-100"
+                required={!demoMode}
+              />
+            </div>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full street-btn"
+            >
+              {loading ? "Entrando..." : demoMode ? "Entrar (Demo)" : "Entrar"}
+            </Button>
+          </form>
+          <p className="mt-4 text-center text-sm text-neutral-600">
+            ¿No tienes cuenta?{" "}
+            <Link href="/register" className="font-semibold text-[#FF6B00] hover:underline">
+              Regístrate
+            </Link>
+          </p>
+        </CardContent>
+      </Card>
+    </div>
   );
 }
 
 export default function LoginPage() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#FFF8F0] p-4">
+    <StreetShell centered showTagline={false}>
       <Suspense>
         <LoginForm />
       </Suspense>
-    </div>
+    </StreetShell>
   );
 }

@@ -18,6 +18,7 @@ export interface DemoVendorData {
   longitude: number;
   capacity_total: number;
   hours: Record<string, string>;
+  image_url?: string | null;
   menuItems: {
     item_name: string;
     description_original: string;

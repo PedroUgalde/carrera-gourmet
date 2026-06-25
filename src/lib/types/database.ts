@@ -22,6 +22,7 @@ export interface Vendor {
   capacity_total: number;
   hours: Record<string, string>;
   tags: string[];
+  image_url: string | null;
   created_at: string;
 }
 
@@ -79,6 +80,7 @@ export interface RecommendedVendor {
   capacity_total: number;
   available: number;
   tags: string[];
+  image_url?: string | null;
   distance_km: number;
   score: number;
   menus: MenuItem[];

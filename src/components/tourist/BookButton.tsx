@@ -23,7 +23,7 @@ export function BookButton({
 
   const handleBook = async () => {
     if (available < partySize) {
-      toast.error("Not enough capacity for your party");
+      toast.error("No hay suficiente aforo para tu grupo");
       return;
     }
 
@@ -37,14 +37,14 @@ export function BookButton({
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error ?? "Booking failed");
+        throw new Error(data.error ?? "Reserva fallida");
       }
 
       setBooked(true);
-      toast.success(data.message ?? "Place booked!");
+      toast.success(data.message ?? "¡Lugar reservado!");
       onBooked?.();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Booking failed");
+      toast.error(err instanceof Error ? err.message : "Reserva fallida");
     } finally {
       setLoading(false);
     }
@@ -52,8 +52,8 @@ export function BookButton({
 
   if (booked) {
     return (
-      <Button disabled className="w-full bg-green-600">
-        Booked — Your spot is secured
+      <Button disabled className="w-full rounded-full bg-green-600 font-bold">
+        Reservado — tu lugar está asegurado
       </Button>
     );
   }
@@ -62,17 +62,17 @@ export function BookButton({
     <Button
       onClick={handleBook}
       disabled={loading || available < partySize}
-      className="h-12 w-full bg-[#2D6A4F] hover:bg-[#2D6A4F]/90"
+      className="h-12 w-full rounded-full bg-[#FF6B00] font-bold hover:bg-[#E85D04]"
     >
       {loading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-          Booking...
+          Reservando...
         </>
       ) : available < partySize ? (
-        "No capacity available"
+        "Sin aforo disponible"
       ) : (
-        "Book Place"
+        "Reservar lugar"
       )}
     </Button>
   );

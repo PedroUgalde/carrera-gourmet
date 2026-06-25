@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { StreetShell } from "@/components/layout/StreetShell";
 import { VendorCard } from "@/components/tourist/VendorCard";
 import type { RecommendedVendor } from "@/lib/types/database";
 import { cn } from "@/lib/utils";
@@ -50,46 +51,49 @@ export default function TouristResultsPage() {
 
   if (!data) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#FFF8F0] p-4">
-        <p className="text-muted-foreground">No search results found.</p>
-        <Link
-          href="/tourist/search"
-          className={cn(buttonVariants(), "bg-[#2D6A4F]")}
-        >
-          Start a new search
-        </Link>
-      </div>
+      <StreetShell centered showFooter={false}>
+        <div className="flex flex-col items-center gap-4 text-center">
+          <p className="text-neutral-600">No hay resultados de búsqueda.</p>
+          <Link href="/tourist/search" className={cn(buttonVariants(), "street-btn")}>
+            Nueva búsqueda
+          </Link>
+        </div>
+      </StreetShell>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FFF8F0] py-6">
-      <div className="mx-auto max-w-md space-y-6 p-4">
+    <StreetShell showFooter={false}>
+      <div className="mx-auto max-w-md space-y-6 p-4 py-6">
         <div className="flex items-center gap-3">
           <Link
             href="/tourist/search"
-            className={cn(buttonVariants({ variant: "ghost", size: "icon" }))}
+            className={cn(
+              buttonVariants({ variant: "ghost", size: "icon" }),
+              "rounded-full hover:bg-orange-50 hover:text-[#FF6B00]"
+            )}
           >
             <ArrowLeft className="h-5 w-5" />
           </Link>
           <div>
-            <h1 className="text-2xl font-bold text-[#2D6A4F]">Top picks near you</h1>
-            <p className="text-sm text-muted-foreground">
-              {data.vendors.length} authentic spots found
+            <h1 className="street-heading text-2xl">Puestos cerca de ti</h1>
+            <p className="text-sm text-neutral-600">
+              {data.vendors.length} antojos encontrados
             </p>
           </div>
         </div>
 
         {data.vendors.length === 0 ? (
-          <div className="rounded-lg border bg-white p-6 text-center">
-            <p className="text-muted-foreground">
-              No vendors match your preferences with available capacity.
+          <div className="street-card p-6 text-center">
+            <p className="text-neutral-600">
+              Ningún puesto coincide con tus preferencias o no hay aforo
+              disponible.
             </p>
             <Link
               href="/tourist/search"
-              className={cn(buttonVariants(), "mt-4 bg-[#E85D04]")}
+              className={cn(buttonVariants(), "mt-4 street-btn")}
             >
-              Adjust preferences
+              Ajustar búsqueda
             </Link>
           </div>
         ) : (
@@ -104,6 +108,6 @@ export default function TouristResultsPage() {
           ))
         )}
       </div>
-    </div>
+    </StreetShell>
   );
 }

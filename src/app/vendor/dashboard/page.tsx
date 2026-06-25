@@ -1,11 +1,12 @@
 import { VendorDashboardForm } from "@/components/vendor/VendorDashboardForm";
+import { StreetShell } from "@/components/layout/StreetShell";
 
 export const dynamic = "force-dynamic";
 
 export default function VendorDashboardPage() {
   return (
-    <div className="min-h-screen bg-[#FFF8F0] py-6">
+    <StreetShell showFooter={false}>
       <VendorDashboardForm />
-    </div>
+    </StreetShell>
   );
 }

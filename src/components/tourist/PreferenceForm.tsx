@@ -43,7 +43,7 @@ export function PreferenceForm() {
 
   const useMyLocation = () => {
     if (!navigator.geolocation) {
-      toast.error("Geolocation not supported");
+      toast.error("Geolocalización no disponible");
       return;
     }
     setLocating(true);
@@ -52,11 +52,11 @@ export function PreferenceForm() {
         setLatitude(pos.coords.latitude);
         setLongitude(pos.coords.longitude);
         setLocating(false);
-        toast.success("Location detected");
+        toast.success("Ubicación detectada");
       },
       () => {
         setLocating(false);
-        toast.error("Could not get location — select a city instead");
+        toast.error("No se pudo obtener ubicación — elige una ciudad");
       },
       { enableHighAccuracy: true, timeout: 10000 }
     );
@@ -66,7 +66,7 @@ export function PreferenceForm() {
     const coords = CITY_COORDS[city];
     setLatitude(coords.lat);
     setLongitude(coords.lng);
-    toast.info(`Using ${city} center as location`);
+    toast.info(`Usando centro de ${city}`);
   };
 
   const handleSearch = async () => {
@@ -101,7 +101,7 @@ export function PreferenceForm() {
       );
       router.push("/tourist/results");
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Search failed");
+      toast.error(err instanceof Error ? err.message : "Búsqueda fallida");
     } finally {
       setLoading(false);
     }
@@ -117,32 +117,44 @@ export function PreferenceForm() {
   };
 
   return (
-    <div className="mx-auto max-w-md space-y-6 p-4">
+    <div className="mx-auto max-w-md space-y-6 p-4 py-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-[#2D6A4F]">Find Authentic Food</h1>
-          <p className="text-sm text-muted-foreground">
-            Discover local gems near you
+          <h1 className="street-heading text-2xl">¿Qué se te antoja?</h1>
+          <p className="text-sm text-neutral-600">
+            Encuentra puestos callejeros cerca de ti
           </p>
         </div>
-        <Button type="button" variant="outline" size="sm" onClick={handleLogout}>
-          Log out
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          className="rounded-full border-orange-200"
+          onClick={handleLogout}
+        >
+          Salir
         </Button>
       </div>
 
-      <Card>
+      <Card className="street-card">
         <CardHeader>
-          <CardTitle className="text-lg">Your preferences</CardTitle>
+          <CardTitle className="text-lg font-bold text-neutral-900">
+            Tus preferencias
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="space-y-2">
-            <Label>Dietary preferences</Label>
+            <Label>Dieta y estilo</Label>
             <div className="flex flex-wrap gap-2">
               {DIETARY_OPTIONS.map((opt) => (
                 <Badge
                   key={opt}
                   variant={preferences.includes(opt) ? "default" : "outline"}
-                  className="cursor-pointer px-3 py-1.5 text-sm"
+                  className={
+                    preferences.includes(opt)
+                      ? "cursor-pointer bg-[#FF6B00] px-3 py-1.5 text-sm hover:bg-[#E85D04]"
+                      : "cursor-pointer border-orange-200 px-3 py-1.5 text-sm hover:bg-orange-50"
+                  }
                   onClick={() => togglePreference(opt)}
                 >
                   {opt}
@@ -152,58 +164,59 @@ export function PreferenceForm() {
           </div>
 
           <div className="space-y-2">
-            <Label>Allergies (comma separated)</Label>
+            <Label>Alergias (separadas por coma)</Label>
             <Textarea
-              placeholder="e.g. peanuts, shellfish, dairy"
+              placeholder="ej. cacahuate, mariscos, lácteos"
               value={allergies}
               onChange={(e) => setAllergies(e.target.value)}
+              className="border-orange-100"
               rows={2}
             />
-            <p className="text-xs text-muted-foreground">
-              Places containing these allergens will be excluded from results.
-            </p>
           </div>
 
           <div className="space-y-2">
-            <Label>Budget</Label>
+            <Label>Presupuesto</Label>
             <Select value={budget} onValueChange={(v) => v && setBudget(v)}>
-              <SelectTrigger>
+              <SelectTrigger className="border-orange-100">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="$">$ — Budget-friendly (under $60 MXN)</SelectItem>
-                <SelectItem value="$$">$$ — Mid-range ($40–120 MXN)</SelectItem>
+                <SelectItem value="$">$ — Barato (menos de $60 MXN)</SelectItem>
+                <SelectItem value="$$">$$ — Medio ($40–120 MXN)</SelectItem>
                 <SelectItem value="$$$">$$$ — Premium ($100+ MXN)</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-2">
-            <Label>Party size</Label>
+            <Label>¿Cuántos van?</Label>
             <Input
               type="number"
               min={1}
               max={20}
               value={partySize}
               onChange={(e) => setPartySize(parseInt(e.target.value) || 1)}
+              className="border-orange-100"
             />
           </div>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="street-card">
         <CardHeader>
-          <CardTitle className="text-lg">Location</CardTitle>
+          <CardTitle className="text-lg font-bold text-neutral-900">
+            Ubicación
+          </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label>Or pick a city</Label>
+            <Label>Ciudad</Label>
             <Select value={city} onValueChange={(v) => v && setCity(v as City)}>
-              <SelectTrigger>
+              <SelectTrigger className="border-orange-100">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="CDMX">Mexico City (CDMX)</SelectItem>
+                <SelectItem value="CDMX">Ciudad de México</SelectItem>
                 <SelectItem value="Guadalajara">Guadalajara</SelectItem>
                 <SelectItem value="Monterrey">Monterrey</SelectItem>
               </SelectContent>
@@ -214,30 +227,30 @@ export function PreferenceForm() {
             <Button
               type="button"
               variant="outline"
-              className="h-12"
+              className="h-12 rounded-full border-orange-200 font-semibold hover:bg-orange-50"
               onClick={useMyLocation}
               disabled={locating}
             >
               {locating ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                <MapPin className="mr-2 h-4 w-4" />
+                <MapPin className="mr-2 h-4 w-4 text-[#FF6B00]" />
               )}
-              Use my location
+              Usar mi ubicación
             </Button>
             <Button
               type="button"
               variant="ghost"
-              className="h-10"
+              className="h-10 font-medium text-neutral-600"
               onClick={useCityDefault}
             >
-              Use city center instead
+              Usar centro de la ciudad
             </Button>
           </div>
 
           {latitude !== null && longitude !== null && (
-            <p className="text-xs text-muted-foreground">
-              Location: {latitude.toFixed(4)}, {longitude.toFixed(4)}
+            <p className="text-xs text-neutral-500">
+              Ubicación: {latitude.toFixed(4)}, {longitude.toFixed(4)}
             </p>
           )}
         </CardContent>
@@ -246,15 +259,15 @@ export function PreferenceForm() {
       <Button
         onClick={handleSearch}
         disabled={loading}
-        className="h-14 w-full bg-[#E85D04] text-lg hover:bg-[#E85D04]/90"
+        className="h-14 w-full rounded-full bg-[#FF6B00] text-lg font-black uppercase tracking-wide hover:bg-[#E85D04]"
       >
         {loading ? (
           <>
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            Searching...
+            Buscando puestos...
           </>
         ) : (
-          "Find Authentic Food"
+          "Buscar antojos"
         )}
       </Button>
     </div>

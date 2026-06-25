@@ -52,7 +52,9 @@
   --background: #fff8f0;
   --foreground: oklch(0.145 0 0);
   --brand-green: #2d6a4f;
-  --brand-orange: #e85d04;
+  --brand-orange: #ff6b00;
+  --brand-red: #d62828;
+  --street-cream: #fff5eb;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
   --popover: oklch(1 0 0);
@@ -128,5 +130,77 @@
   }
   html {
     @apply font-sans;
+  }
+  .font-graffiti {
+    font-family: var(--font-rubik-spray), Impact, "Arial Black", sans-serif;
+  }
+  .graffiti-logo-brick {
+    background-color: #7a6454;
+    background-image:
+      radial-gradient(
+        ellipse at 50% 40%,
+        rgba(255, 107, 0, 0.28) 0%,
+        transparent 68%
+      ),
+      linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.22)),
+      repeating-linear-gradient(
+        180deg,
+        transparent 0,
+        transparent 24px,
+        rgba(35, 30, 25, 0.55) 24px,
+        rgba(35, 30, 25, 0.55) 26px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        #9a8070 0px,
+        #9a8070 52px,
+        #5c4838 52px,
+        #5c4838 54px,
+        #8a7565 54px,
+        #8a7565 106px,
+        #5c4838 106px,
+        #5c4838 108px
+      );
+    border-radius: 6px;
+    box-shadow:
+      0 3px 10px rgba(0, 0, 0, 0.35),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    overflow: hidden;
+  }
+  .graffiti-logo-brick::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 106px,
+      rgba(0, 0, 0, 0.08) 106px,
+      rgba(0, 0, 0, 0.08) 108px
+    );
+    background-size: 108px 26px;
+    background-position: 54px 13px;
+    pointer-events: none;
+  }
+  .graffiti-throw-up {
+    color: #0d0d0d;
+    -webkit-text-stroke: 1.5px #ffffff;
+    paint-order: stroke fill;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-shadow:
+      0 0 10px rgba(255, 120, 0, 0.95),
+      0 0 22px rgba(255, 90, 0, 0.65),
+      2px 3px 0 rgba(255, 107, 0, 0.45),
+      3px 4px 0 rgba(0, 0, 0, 0.5);
+  }
+  .street-card {
+    @apply rounded-2xl border-2 border-orange-100 bg-white shadow-sm;
+  }
+  .street-heading {
+    @apply font-black uppercase tracking-tight text-neutral-900;
+  }
+  .street-btn {
+    @apply rounded-full bg-[#FF6B00] font-bold text-white hover:bg-[#E85D04];
   }
 }

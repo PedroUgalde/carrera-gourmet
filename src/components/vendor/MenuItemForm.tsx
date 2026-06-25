@@ -51,7 +51,7 @@ export function MenuItemForm({
             size="sm"
             onClick={onTranslate}
             disabled={translating || items.every((i) => !i.description_original)}
-            className="bg-[#E85D04] hover:bg-[#E85D04]/90"
+            className="rounded-full bg-[#FF6B00] hover:bg-[#E85D04]"
           >
             {translating ? "Traduciendo..." : "Traducir con IA"}
           </Button>
@@ -59,7 +59,7 @@ export function MenuItemForm({
       </div>
 
       {items.map((item, index) => (
-        <div key={index} className="space-y-3 rounded-lg border p-4">
+        <div key={index} className="space-y-3 rounded-xl border-2 border-orange-50 bg-[#FFF5EB]/30 p-4">
           <div className="flex items-start justify-between">
             <span className="text-sm font-medium text-muted-foreground">
               Platillo {index + 1}

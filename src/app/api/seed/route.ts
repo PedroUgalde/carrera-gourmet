@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { SEED_VENDORS } from "@/lib/seed-vendors";
 import { isSupabaseConfigured } from "@/lib/config";
+import { getVendorImageUrl } from "@/lib/vendor-images";
 
 const DEFAULT_HOURS = {
   mon: "10-22",
@@ -24,7 +25,7 @@ export async function POST() {
   const admin = createAdminClient();
   const results: { email: string; vendor: string; status: string }[] = [];
 
-  for (const seed of SEED_VENDORS) {
+  for (const [index, seed] of SEED_VENDORS.entries()) {
     const { data: existingUsers } = await admin.auth.admin.listUsers();
     let userId = existingUsers?.users.find((u) => u.email === seed.email)?.id;
 
@@ -68,6 +69,7 @@ export async function POST() {
           capacity_total: seed.capacity_total,
           hours: DEFAULT_HOURS,
           tags: seed.tags,
+          image_url: getVendorImageUrl(seed.image_url, index),
         })
         .select("id")
         .single();
@@ -92,6 +94,7 @@ export async function POST() {
           longitude: seed.longitude,
           capacity_total: seed.capacity_total,
           tags: seed.tags,
+          image_url: getVendorImageUrl(seed.image_url, index),
         })
         .eq("id", vendorId);
     }
